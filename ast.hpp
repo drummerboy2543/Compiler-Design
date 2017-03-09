@@ -50,6 +50,10 @@ class Mul_EXPR;
 class Div_EXPR;
 class Mod_EXPR;
 class Negation_EXPR;
+class Bit_Not_EXPR;
+class Bit_And_EXPR;
+class Bit_Or_EXPR;
+
 //Function to check typing before implementation. 
 bool Check(int input, int EXPR);
 //Base Class
@@ -70,8 +74,11 @@ struct EXPR::Visitor {
     virtual void visit(Bool_EXPR*) = 0;
     virtual void visit(Int_EXPR*) = 0;
     virtual void visit(Not_EXPR*) = 0;
+    virtual void visit (Bit_Not_EXPR*)=0;
     virtual void visit(Or_EXPR*) = 0;
+    virtual void visit (Bit_Or_EXPR*)=0;
     virtual void visit(And_EXPR*) = 0;
+    virtual void visit (Bit_And_EXPR*)=0;
     virtual void visit(Xor_EXPR*) = 0;
     virtual void visit(Eq_EXPR*) = 0;
     virtual void visit(Neq_EXPR*) = 0;
@@ -94,7 +101,6 @@ struct EXPR::Visitor {
 class Bool_EXPR : public EXPR {
 public:
     bool Value;
-
     Bool_EXPR(bool v1) : Value(v1) {
         EXPR_type = Bool_Type;
     };
@@ -137,6 +143,27 @@ public:
     }
 };
 
+
+//Bit Not Expression
+//The following derived classes boolean expressions values and changes the output in the Eval Function.
+class Bit_Not_EXPR : public EXPR {
+public:
+    EXPR* e1;
+
+    Bit_Not_EXPR(EXPR* a) : e1(a) {
+        bool Type_Defined = true;
+        Type_Defined = Check(a->EXPR_type, a->Int_Type);
+        if (Type_Defined != true) {
+            ExceptionThrow(Type_Error, "in AST Bit Not Error:Expression is not a int");
+        }
+        EXPR_type = Int_Type;
+    };
+
+    void accept(Visitor& v) {
+        return v.visit(this);
+    }
+};
+
 //Intermediate Class to deal modularize code for boolean operators holds both boolean expressions.
 class Bool_Binary_EXPR : public EXPR {
 public:
@@ -169,6 +196,56 @@ public:
         return v.visit(this);
     }
 };
+
+
+//Bit And Expression
+ // The following expressions are boolean operators and check if both expressions are type bool
+class Bit_And_EXPR : public EXPR {
+    
+    
+public:
+ EXPR* e1;
+    EXPR* e2;
+    Bit_And_EXPR(EXPR* a, EXPR* b) {
+        e1=a;
+        e2=b;
+        EXPR_type = Int_Type;
+        bool Type_Defined = true;
+        Type_Defined = Check(a->EXPR_type, b->EXPR_type);
+        if (Type_Defined != true) {
+            ExceptionThrow(Type_Error, "in AST Bit And Error: Types are not the same");
+        }
+    }
+
+    void accept(Visitor& v) {
+        return v.visit(this);}
+    
+};
+
+
+//Bit Or Expression
+ // The following expressions are boolean operators and check if both expressions are type bool
+class Bit_Or_EXPR : public EXPR {
+     
+public:
+    EXPR* e1;
+    EXPR* e2;
+
+    Bit_Or_EXPR(EXPR* a, EXPR* b) : e1(a), e2(b) {
+        bool Type_Defined = true;
+        EXPR_type = Int_Type;
+        Type_Defined = Check(a->EXPR_type, b->EXPR_type);
+        if (Type_Defined != true) {
+            ExceptionThrow(Type_Error, "in AST Bit Or Error: Types are not the same");
+        }
+    }
+
+    void accept(Visitor& v) {
+        return v.visit(this);
+    }
+};
+
+
 //Or Expression
  // The following expressions are boolean operators and check if both expressions are type bool
 class Or_EXPR : public Bool_Binary_EXPR {
@@ -197,20 +274,16 @@ public:
 
     Xor_EXPR(EXPR* a, EXPR* b) : Bool_Binary_EXPR(a, b) {
         bool Type_Defined = true;
-        Type_Defined = Check(a->EXPR_type, a->Bool_Type);
+        Type_Defined = Check(a->EXPR_type, b->EXPR_type);
         if (Type_Defined != true) {
-            ExceptionThrow(Type_Error, "in AST Xor Error:Expression 1 is not a Bool");
-        }
-        Type_Defined = Check(b->EXPR_type, b->Bool_Type);
-        if (Type_Defined != true) {
-            ExceptionThrow(Type_Error, " in AST Xor Error:Expression 2 is not a Bool");
+            ExceptionThrow(Type_Error, "in AST Xor Error:Expression is not the same");
         }
     };
-
     void accept(Visitor& v) {
         return v.visit(this);
     }
 };
+
 //Equal Expression
  // The following expressions are boolean operators and check if both expressions are the same type
 class Eq_EXPR : public EXPR {

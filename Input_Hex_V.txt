@@ -1,0 +1,14 @@
+h            # this indicates (or did indicate if reading in output file) what the numerical reprasentation is going to be. d=decimal h=hex b=binary.
+()?=!&^|:~  #These are the single symbols used to make tokens.
++-*/%       # These are the math symbols 
+&& ||  ==   # These require mutiple consumption to get a accurate token
+<><=>= !=   #  The '#' is the start of a comment which is not picked up by the parser.
+            #Empty Blank to test skip
+   5        # trying various number combinations.
+   48
+   6584
+   truefalse    # trying to boolean functions back to back of each other.
+   false        # trying a normal boolean
+   
+  12+23=35      #some real life examples.
+  !(true||false)

@@ -18,7 +18,8 @@
 #include "Eval.hpp"
 #include "Check.hpp"
 #include "Print.hpp"
-
+#include "lexer.hpp"
+#include <fstream>
 using namespace std;
 
 void Expression_Print(std::string message, EXPR*e) {
@@ -33,7 +34,52 @@ void Expression_Print(std::string message, EXPR*e) {
  * 
  */
 int main(int argc, char** argv) {
-    std::cout << "Welcome to Andrew Thornborough's Compiler  \n------------------------------------------- \n";
+    char Option_Input;
+    
+    int option;
+
+    std::cout << "Welcome to Andrew Thornborough's Lexer  \n------------------------------------------- \n";
+    std::cin>>Option_Input;
+    Lexer x;
+    string Whole_Input="";
+    string input;
+    if (Option_Input=='d'){
+        option=0;
+    }
+    else if (Option_Input=='h'){
+        option=1;
+    }
+    else if (Option_Input=='b'){
+        option=2;
+    }
+    while(getline(std::cin,input, '\n')){
+Whole_Input=Whole_Input+input+"\n";
+         x.Read_Line(input,option);
+       
+    }
+    cout<<"The whole input is the following: \n \n"<<Whole_Input;
+            
+         cout<<"\nThe final output of this file is: \n \n";
+        x.Print();
+        
+        std::cout<<"\n Testing Bit Expressions \n \n";
+        
+         EXPR* e;
+         e = new Bit_Not_EXPR(new Int_EXPR(13));
+         Expression_Print("Bit_Not_Expression Test(~13): e == ", e);
+         e = new Bit_And_EXPR(new Int_EXPR(14),new Int_EXPR(7));
+         Expression_Print("Bit_And_Expression Test(14&7): e == ", e);
+         e = new Bit_Or_EXPR(new Int_EXPR(14),new Int_EXPR(7));
+         Expression_Print("Bit_Or_Expression Test(14|7): e == ", e);
+         e = new Xor_EXPR(new Int_EXPR(14),new Int_EXPR(7));
+         Expression_Print("Bit_Xor_Expression Test with int (14^7): e == ", e);
+    e = new Xor_EXPR(new Bool_EXPR(1),new Bool_EXPR(0));
+         Expression_Print("Bit_Xor_Expression Test with bool (1^0): e == ", e);
+          e = new Xor_EXPR(new Bool_EXPR(1),new Bool_EXPR(1));
+         Expression_Print("Bit_Xor_Expression Test with bool (1^1): e == ", e);
+         //This is was the implemintation to the AST I am keeping this for keeping.
+  /*
+ std::cout << "Welcome to Andrew Thornborough's Compiler  \n------------------------------------------- \n";
     int count = 0;
     int max_num = 8;
     EXPR* e;
@@ -188,7 +234,7 @@ int main(int argc, char** argv) {
             break;
 
     }
-
+   * */ 
     return 0;
 }
 

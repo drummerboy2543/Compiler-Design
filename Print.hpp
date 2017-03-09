@@ -106,6 +106,15 @@ bool Parenth_Cond(EXPR* e) {
         void visit(Negation_EXPR* e) {
             value = true;
         }
+        void visit(Bit_Not_EXPR* e) {
+            value = true;
+        }
+        void visit(Bit_And_EXPR* e) {
+            value = true;
+        }
+        void visit(Bit_Or_EXPR* e) {
+            value = true;
+        }
     };
     Parenth_database V;
     e->accept(V);
@@ -156,13 +165,26 @@ void Print(EXPR* e) {
             Parenth_Check(e->e1);
         }
 
-        void visit(Or_EXPR* e) {
+         void visit(Bit_Not_EXPR* e) {
+            std::cout << "~";
+            Parenth_Check(e->e1);
+        }
+        void visit(Bit_Or_EXPR* e) {
             Parenth_Check(e->e1);
             std::cout << "|";
             Parenth_Check(e->e2);
         }
-
+          void visit(Or_EXPR* e) {
+            Parenth_Check(e->e1);
+            std::cout << "||";
+            Parenth_Check(e->e2);
+        }
         void visit(And_EXPR* e) {
+            Parenth_Check(e->e1);
+            std::cout << "&&";
+            Parenth_Check(e->e2);
+        }
+          void visit(Bit_And_EXPR* e) {
             Parenth_Check(e->e1);
             std::cout << "&";
             Parenth_Check(e->e2);

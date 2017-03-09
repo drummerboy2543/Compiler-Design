@@ -52,6 +52,16 @@ int Check(EXPR* e) {
             }
         }
         
+           void visit(Bit_Not_EXPR* e) {
+            if (Check(e->e1) != e->Int_Type) {
+                ExceptionThrow(Type_Error, "Bit Not Error:Expression is not a Int");
+                Outcome = ERROR;
+            } else {
+                Outcome = e->Bool_Type;
+            }
+        }
+        
+        
        //These boolean operator expressions require two boolean sub expressions 
         void visit(Or_EXPR* e) {
             if (Check(e->e1) != e->Bool_Type) {
@@ -65,6 +75,18 @@ int Check(EXPR* e) {
             }
         }
 
+         void visit(Bit_Or_EXPR* e) {
+
+            if (Check(e->e1) != Check(e->e2)) {
+                ExceptionThrow(Type_Error, "Bit Or Error:Expression are not the same type.");
+                Outcome = ERROR;
+            } else {
+                Outcome = e->Bool_Type;
+            }
+
+        }
+        
+        
         void visit(And_EXPR* e) {
 
             if (Check(e->e1) != e->Bool_Type) {
@@ -77,13 +99,24 @@ int Check(EXPR* e) {
                 Outcome = e->Bool_Type;
             }
         }
+        
+             void visit(Bit_And_EXPR* e) {
 
-        void visit(Xor_EXPR* e) {
-            if (Check(e->e1) != e->Bool_Type) {
-                ExceptionThrow(Type_Error, "Or Error:Expression 1 is not a Bool");
+            if (Check(e->e1) != Check(e->e2)) {
+                ExceptionThrow(Type_Error, "Bit And Error:Expression are not the same type.");
                 Outcome = ERROR;
-            } else if (Check(e->e2) != e->Bool_Type) {
-                ExceptionThrow(Type_Error, "Or Error:Expression 2 is not a Bool");
+            } else {
+                Outcome = e->Bool_Type;
+            }
+
+        }
+        
+
+        
+        void visit(Xor_EXPR* e) {
+            
+               if (Check(e->e1) != Check(e->e2)) {
+                ExceptionThrow(Type_Error, "Xor Error:Expression are not the same type.");
                 Outcome = ERROR;
             } else {
                 Outcome = e->Bool_Type;

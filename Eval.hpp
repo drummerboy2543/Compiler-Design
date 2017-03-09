@@ -47,19 +47,30 @@ int Eval(EXPR* e) {
             assert(Check(e->e1) == e->Bool_Type);
             Outcome = (!(Eval(e->e1)));
         }
-
+    void visit(Bit_Not_EXPR* e) {
+            assert(Check(e->e1) == e->Int_Type);
+            Outcome = (~(Eval(e->e1)));
+        }
+        
         void visit(Or_EXPR* e) {
             assert((Check(e->e1) && Check(e->e2)) == e->Bool_Type);
-            Outcome = ((Eval(e->e1)) || (Eval(e->e2)));
+            Outcome = (Eval(e->e1) ? true : Eval(e->e2));
         }
-
+        void visit(Bit_Or_EXPR* e) {
+            assert((Check(e->e1) == Check(e->e2)));
+            Outcome = ((Eval(e->e1)) | (Eval(e->e2)));
+        }
         void visit(And_EXPR* e) {
             assert((Check(e->e1) && Check(e->e2)) == e->Bool_Type);
-            Outcome = ((Eval(e->e1))&&(Eval(e->e2)));
+            Outcome = (Eval(e->e1) ? Eval(e->e2) : false);
         }
 
+        void visit(Bit_And_EXPR* e) {
+            assert((Check(e->e1) == Check(e->e2)));
+            Outcome = ((Eval(e->e1)) & (Eval(e->e2)));
+        }
         void visit(Xor_EXPR* e) {
-            assert((Check(e->e1) && Check(e->e2)) == e->Bool_Type);
+             assert((Check(e->e1) == Check(e->e2)));
             Outcome = ((Eval(e->e1))^(Eval(e->e2)));
         }
         
