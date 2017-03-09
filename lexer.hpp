@@ -21,18 +21,21 @@
 #define Binary 2
 class Lexer {
     int display_option=Decimal;
+    // Vector to hold all tokens created
     std::vector <Token*> Vector_Of_All_Tokens;
     std::string::iterator Start_String;
     std::string::iterator End_String;
+    //Function to clear comments
     std::string Clear_Comments(std::string s);
+    //Function to check boolean for a boolean token
     void checkbool(bool start_Letter);
+    //Function to check Interger for a integer token
    void  Check_Num();
     bool Consume_Whitespace();
-    
+    //Increments the string ittereator
     void Consume() {
         Start_String++;
     }
-
     char Look_Ahead() {
         return *Start_String;
     }
@@ -56,18 +59,18 @@ std::string Lexer::Clear_Comments(std::string Input_str) {
     }
 
 }
-
+//Main function sets the itterators and then calls next until the string is has been parsed.
 void Lexer::Read_Line(std::string Input_Str,int option) {
     display_option=option;
     std::string Trimed_Str;
-    Trimed_Str = Clear_Comments(Input_Str);
+    Trimed_Str = Clear_Comments(Input_Str); //Get rid of any comments
      
     Start_String = Trimed_Str.begin();
    
     End_String = Trimed_Str.end();
    
     while(Start_String<End_String){
-    Next();}
+    Next();} //Call next until end of line.
     
     
     ;
@@ -85,7 +88,7 @@ bool Lexer::Consume_Whitespace() {
     }
     return true;
 }
-
+//Goes through and determines the token for a char/symbol
 void Lexer::Next() {
     bool Has_Line_Finished =false;
    Has_Line_Finished= Consume_Whitespace();
@@ -96,11 +99,11 @@ void Lexer::Next() {
         
         case 't':
         case'T':
-            checkbool(true);
+            checkbool(true); //Verify it is a true boolean
             break;
             case 'f':
         case'F':
-                checkbool(false);
+                checkbool(false); //Verify it is a false boolean
                 break;
         case '0':
         case '1':
@@ -112,7 +115,7 @@ void Lexer::Next() {
         case '7':
         case '8':
         case '9':
-            Check_Num();
+            Check_Num(); // Get the whole number.
             break;
                                  
         case '+':
