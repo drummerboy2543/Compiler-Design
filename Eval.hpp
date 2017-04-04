@@ -20,6 +20,7 @@
 #define Type_Error 0
 #define Arithmetic_Error 1
 
+
 /*
  This Function Evaluates the typing of each node. Using the Visitor Pattern
  *  Before the Evaluation it checks if the typing in the expression is still sound as a double check.
@@ -34,10 +35,12 @@ int Eval(EXPR* e) {
         
       // The following functions simply Returns values
         void visit(Bool_EXPR* e) {
+           // std::cout<<"Eval Bool \n";
             Outcome = e->Value;
         }
 
         void visit(Int_EXPR* e) {
+             // std::cout<<"Eval Int \n";
             Outcome = e->Value;
         }
 

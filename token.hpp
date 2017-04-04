@@ -29,7 +29,7 @@ enum Token_Types {
     Or_Token, // | token
     Xor_Token, // ^ token
     Not_Token, // ! token
-    Equal_Token, // == token
+    Equal_Token, // = token
     Not_Equal_Token, // != token
     LT_Token, // < token
     GT_Token, // > token
@@ -82,6 +82,9 @@ public:
             return "false";
         };
     };
+    bool Send_Bool_Value(){
+        return value;
+    }
 };
 
 class Integer_Token : public Token {
@@ -112,6 +115,9 @@ public:
         std::string str = ss.str();
         return str;
     };
+   int Send_Int_Value(){
+       return value;
+    }
 };
 
 class Punc_Token : public Token {
@@ -149,7 +155,7 @@ std::string Token::Get_Token_String(int val) {
             return "Xor Token";
         case Not_Token: // ! token
             return "Not Token";
-        case Equal_Token: // == token
+        case Equal_Token: // = token
             return "Equal Token";
         case Not_Equal_Token: // != token
             return "Not Equal Token";

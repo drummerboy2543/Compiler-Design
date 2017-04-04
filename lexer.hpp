@@ -11,6 +11,7 @@
  * Created on March 8, 2017, 11:38 AM
  */
 #include "token.hpp"
+#include "ExceptionHandle.h"
 #include <iostream>
 #include <vector>
 #include<sstream>
@@ -19,6 +20,7 @@
 #define Decimal 0
 #define Hex 1
 #define Binary 2
+#define Syntax_ErrorL 3
 class Lexer {
     int display_option=Decimal;
     // Vector to hold all tokens created
@@ -44,8 +46,11 @@ public:
 
 
 
-    void Read_Line(std::string Input_Str,int option);
+    std::vector <Token*>  Read_Line(std::string Input_Str,int option);
     void Print();
+    void Clear_Vec(){
+    Vector_Of_All_Tokens.clear();
+    }
 };
 
 std::string Lexer::Clear_Comments(std::string Input_str) {
@@ -60,7 +65,7 @@ std::string Lexer::Clear_Comments(std::string Input_str) {
 
 }
 //Main function sets the itterators and then calls next until the string is has been parsed.
-void Lexer::Read_Line(std::string Input_Str,int option) {
+std::vector <Token*> Lexer::Read_Line(std::string Input_Str,int option) {
     display_option=option;
     std::string Trimed_Str;
     Trimed_Str = Clear_Comments(Input_Str); //Get rid of any comments
@@ -71,9 +76,7 @@ void Lexer::Read_Line(std::string Input_Str,int option) {
    
     while(Start_String<End_String){
     Next();} //Call next until end of line.
-    
-    
-    ;
+    return Vector_Of_All_Tokens;
 }
 
 bool Lexer::Consume_Whitespace() {
@@ -224,7 +227,8 @@ void Lexer::Next() {
             Consume();
             Vector_Of_All_Tokens.push_back(new Punc_Token(Tilda_Token));
             break;
-        default: std::cout << "ERROR NO TOKEN AVALIBLE ";
+        default:
+        ExceptionThrow(Syntax_ErrorL, " No Token");
         Consume();
         break;
 
@@ -269,7 +273,7 @@ void Lexer::checkbool(bool start_Letter) {
             }
         }
     }
-    std::cout<< "ERROR NO TOKEN AVALIBLE \n";
+    ExceptionThrow(Syntax_ErrorL, " Failed to construct bool");
 }
 
 void Lexer::Check_Num(){

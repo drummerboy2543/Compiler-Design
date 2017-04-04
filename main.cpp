@@ -18,7 +18,7 @@
 #include "Eval.hpp"
 #include "Check.hpp"
 #include "Print.hpp"
-#include "lexer.hpp"
+#include "Parser.hpp"
 #include <fstream>
 using namespace std;
 
@@ -35,32 +35,65 @@ void Expression_Print(std::string message, EXPR*e) {
  */
 int main(int argc, char** argv) {
     char Option_Input;
-    
+    bool Picked_Option=false;
     int option;
-
-    std::cout << "Welcome to Andrew Thornborough's Lexer  \n------------------------------------------- \n";
-    std::cin>>Option_Input;
-    Lexer x;
+    int eval_Value;
+    Lexer Lexer_1;
+   
     string Whole_Input="";
     string input;
+    bool finish_calc=false;
+    std::cout << "Welcome to Andrew Thornborough's Calculator  \n----------------------------------------------------------------------- \n";
+    std::cout<<"This calculator can do the following \n";
+      std::cout<<"1. One row calculations.\n2. Bitwise operators and exclusive/inclusive OR \n";
+     std::cout<<"3. Output in various formats like hex and binary.\n4. Can handle comments with #\n";
+     std::cout<<"\n----------------------------------------------------------------------- \n\n";
+    while(Picked_Option==false){
+        std::cout<<"Please insert the following command d for decimal h for hex or b for binary \n";
+    std::cin>>Option_Input;
+
     if (Option_Input=='d'){
         option=0;
+        Picked_Option=true;
     }
     else if (Option_Input=='h'){
         option=1;
+        Picked_Option=true;
     }
     else if (Option_Input=='b'){
         option=2;
+        Picked_Option=true;
     }
-    while(getline(std::cin,input, '\n')){
-Whole_Input=Whole_Input+input+"\n";
-         x.Read_Line(input,option);
-       
+    else {
+        std::cout<<"Invalid Option \n";
     }
+    }
+    std::cout<<"Format Selected. Press q then enter to quit. \n Enter a command: \n";
+    while(finish_calc==false){
+        getline(std::cin,input);
+        
+        if (!input.empty()){
+            if (*input.c_str()=='q'){
+                break;
+        }
+            cout<<"\n";
+             Parser Parse_1 ( Lexer_1.Read_Line(input,option));
+                   cout<<"The Value you inputed \n";
+                       Parse_1.Parser_Print();
+                       
+                  eval_Value= Parse_1.Parser_Eval(option);
+                   cout<<"\n";
+                 
+                   Lexer_1.Clear_Vec();
+        }
+
+    }
+    
+    /* From Part 2.
     cout<<"The whole input is the following: \n \n"<<Whole_Input;
             
          cout<<"\nThe final output of this file is: \n \n";
-        x.Print();
+        Lexer_1.Print();
         
         std::cout<<"\n Testing Bit Expressions \n \n";
         
@@ -78,6 +111,7 @@ Whole_Input=Whole_Input+input+"\n";
           e = new Xor_EXPR(new Bool_EXPR(1),new Bool_EXPR(1));
          Expression_Print("Bit_Xor_Expression Test with bool (1^1): e == ", e);
          //This is was the implemintation to the AST I am keeping this for keeping.
+     * */
   /*
  std::cout << "Welcome to Andrew Thornborough's Compiler  \n------------------------------------------- \n";
     int count = 0;
@@ -235,6 +269,7 @@ Whole_Input=Whole_Input+input+"\n";
 
     }
    * */ 
-    return 0;
+     std::cout<<"Calculator Exiting have a great day!";
+    return eval_Value;
 }
 
