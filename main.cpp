@@ -43,11 +43,24 @@ int main(int argc, char** argv) {
     string Whole_Input="";
     string input;
     bool finish_calc=false;
+	/*
+	This calculator starts by picking a format to output in. It can ethier output in decimal, hex or binary.
+	This is inputed based on the first char.
+	After the input the calculator can do one row operation with bitwise operations. 
+	It can also handle comments.
+	
+	The user just inputs a command and the calculator redisplay the input and present the evaluation to the user.
+	If there is a syntax error the calculator throws a exception and crashes 
+	
+	The user can press q and then enter to exit the program. 
+	
+	*/
     std::cout << "Welcome to Andrew Thornborough's Calculator  \n----------------------------------------------------------------------- \n";
     std::cout<<"This calculator can do the following \n";
       std::cout<<"1. One row calculations.\n2. Bitwise operators and exclusive/inclusive OR \n";
      std::cout<<"3. Output in various formats like hex and binary.\n4. Can handle comments with #\n";
      std::cout<<"\n----------------------------------------------------------------------- \n\n";
+	 //Stays in a loop unitl user picks the right command
     while(Picked_Option==false){
         std::cout<<"Please insert the following command d for decimal h for hex or b for binary \n";
     std::cin>>Option_Input;
@@ -69,6 +82,10 @@ int main(int argc, char** argv) {
     }
     }
     std::cout<<"Format Selected. Press q then enter to quit. \n Enter a command: \n";
+	//Main loop of calculator the program will get the input via getline and then lex the input 
+	//and then pass the lexer output into the input of the parser. 
+	// From there the parser will parse and functions can functions can be called from the syntax tree like Eval and print.
+	//This repeats until the user press q.
     while(finish_calc==false){
         getline(std::cin,input);
         

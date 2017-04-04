@@ -35,12 +35,10 @@ int Eval(EXPR* e) {
         
       // The following functions simply Returns values
         void visit(Bool_EXPR* e) {
-           // std::cout<<"Eval Bool \n";
             Outcome = e->Value;
         }
 
         void visit(Int_EXPR* e) {
-             // std::cout<<"Eval Int \n";
             Outcome = e->Value;
         }
 

@@ -45,7 +45,7 @@ class Lexer {
 public:
 
 
-
+//Returns a vector of tokens after the lexer lexes for the parser to parse
     std::vector <Token*>  Read_Line(std::string Input_Str,int option);
     void Print();
     void Clear_Vec(){
@@ -228,6 +228,7 @@ void Lexer::Next() {
             Vector_Of_All_Tokens.push_back(new Punc_Token(Tilda_Token));
             break;
         default:
+		//Throw a exception invalid token
         ExceptionThrow(Syntax_ErrorL, " No Token");
         Consume();
         break;
@@ -273,6 +274,7 @@ void Lexer::checkbool(bool start_Letter) {
             }
         }
     }
+	//Throw a Lexer exception invalid construction of boolean.
     ExceptionThrow(Syntax_ErrorL, " Failed to construct bool");
 }
 
