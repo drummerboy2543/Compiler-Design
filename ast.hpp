@@ -53,7 +53,9 @@ class Negation_EXPR;
 class Bit_Not_EXPR;
 class Bit_And_EXPR;
 class Bit_Or_EXPR;
-
+class Var_Int_EXPR;
+class Var_Bool_EXPR;
+class No_Comp_EXPR;
 //Function to check typing before implementation. 
 bool Check(int input, int EXPR);
 //Base Class
@@ -95,6 +97,10 @@ struct EXPR::Visitor {
     virtual void visit(Div_EXPR*) = 0;
     virtual void visit(Mod_EXPR*) = 0;
     virtual void visit(Negation_EXPR*) = 0;
+    virtual void visit (Var_Int_EXPR*)=0;
+    virtual void visit (Var_Bool_EXPR*)=0;
+    virtual void visit (No_Comp_EXPR*)=0;
+   
 };
 //Bool Expression
 //Derived class to hold boolean values and declare the type to bool.
@@ -109,6 +115,21 @@ public:
         return v.visit(this);
     }
 };
+
+class Var_Bool_EXPR : public EXPR {
+public:
+    bool Value;
+    std::string Name;
+    Var_Bool_EXPR(std::string N, bool v1) : Value(v1) {
+        EXPR_type = Bool_Type;
+        Name=N;
+    };
+
+    void accept(Visitor& v) {
+        return v.visit(this);
+    }
+};
+
 //Int Expression
 //Derived class to hold Integer values and declare the type to Int.
 class Int_EXPR : public EXPR {
@@ -123,6 +144,24 @@ public:
         return v.visit(this);
     }
 };
+
+class Var_Int_EXPR : public EXPR {
+public:
+    int Value;
+    std::string Name;
+    Var_Int_EXPR(std::string N,int v1) : Value(v1) {
+        EXPR_type = Int_Type;
+        Name=N;
+    };
+
+    void accept(Visitor& v) {
+        return v.visit(this);
+    }
+};
+
+
+
+
 //Not Expression
 //The following derived classes boolean expressions values and changes the output in the Eval Function.
 class Not_EXPR : public EXPR {
@@ -642,7 +681,24 @@ public:
     void accept(Visitor& v) {
         return v.visit(this);
     }
+
 };
+
+class No_Comp_EXPR : public EXPR {
+public:
+    EXPR* e1;
+
+    int Value=0;
+    No_Comp_EXPR()  {
+        EXPR_type = Int_Type;
+    };
+
+    void accept(Visitor& v) {
+        return v.visit(this);
+    }
+
+};
+
  //Uses this function to verify if both inputs (in this case type value) is the same.
 bool Check(int input, int EXPR) {
     if (input == EXPR) {

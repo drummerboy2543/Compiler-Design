@@ -4,6 +4,9 @@
  * and open the template in the editor.
  */
 
+#include "ast.hpp"
+
+
 /* 
  * File:   Print.hpp
  * Author: Andrew
@@ -27,10 +30,20 @@ bool Parenth_Cond(EXPR* e) {
             value = false;
         }
 
-        void visit(Int_EXPR* e) {
+        void visit(Var_Int_EXPR* e) {
+            value = false;
+        }
+        void visit(Var_Bool_EXPR* e) {
             value = false;
         }
 
+        void visit(Int_EXPR* e) {
+            value = false;
+        }
+     void visit(No_Comp_EXPR* e) {
+            value = false;
+        }
+        
         void visit(Not_EXPR* e) {
             value = true;
         }
@@ -155,11 +168,19 @@ void Print(EXPR* e) {
                 std::cout << "false";
             }
         }
+            void visit(Var_Bool_EXPR* e) {
+            std::cout << e->Name;
+        }
 
         void visit(Int_EXPR* e) {
             std::cout << e->Value;
         }
-
+         void visit(Var_Int_EXPR* e) {
+            std::cout << e->Name;
+        }
+  void visit(No_Comp_EXPR* e) {
+            std::cout << " ";
+        }
         void visit(Not_EXPR* e) {
             std::cout << "!";
             Parenth_Check(e->e1);

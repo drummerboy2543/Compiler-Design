@@ -34,33 +34,136 @@ void Expression_Print(std::string message, EXPR*e) {
  * 
  */
 int main(int argc, char** argv) {
-    char Option_Input;
+   /*
+    int count=0;
+    
+     std::cout << "Welcome to Andrew Thornborough's Compiler  \n------------------------------------------- \n";		
+     char Option_Input;
+     int option; 
+     std::cout << "Welcome to Andrew Thornborough's Lexer  \n------------------------------------------- \n";
+     std::cin>>Option_Input;
+     Lexer x;
+     string Whole_Input="";
+     string input;
+     if (Option_Input=='d'){
+         option=0;
+     }
+     else if (Option_Input=='h'){
+         option=1;
+     }
+     else if (Option_Input=='b'){
+         option=2;
+     }
+     while(getline(std::cin,input, '\n')){
+         count=count+1;
+     
+         if (!input.empty()){
+            if (*input.c_str()=='q'){
+                break;
+        }
+          }
+      
+ Whole_Input=Whole_Input+input+"\n";
+          x.Read_Line(input,option);
+        
+     }
+     cout<<"The whole input is the following: \n \n"<<Whole_Input;
+             
+          cout<<"\nThe final output of this file is: \n \n";
+         x.Print();
+         
+         std::cout<<"\n Testing Bit Expressions \n \n";
+         
+          EXPR* e;
+          e = new Bit_Not_EXPR(new Int_EXPR(13));
+         Expression_Print("Bit_Not_Expression Test(~13): e == ", e);
+          e = new Bit_And_EXPR(new Int_EXPR(14),new Int_EXPR(7));
+          Expression_Print("Bit_And_Expression Test(14&7): e == ", e);
+          e = new Bit_Or_EXPR(new Int_EXPR(14),new Int_EXPR(7));
+          Expression_Print("Bit_Or_Expression Test(14|7): e == ", e);
+          e = new Xor_EXPR(new Int_EXPR(14),new Int_EXPR(7));
+          Expression_Print("Bit_Xor_Expression Test with int (14^7): e == ", e);
+     e = new Xor_EXPR(new Bool_EXPR(1),new Bool_EXPR(0));
+          Expression_Print("Bit_Xor_Expression Test with bool (1^0): e == ", e);
+           e = new Xor_EXPR(new Bool_EXPR(1),new Bool_EXPR(1));
+          Expression_Print("Bit_Xor_Expression Test with bool (1^1): e == ", e);
+         //This is was the implemintation to the AST I am keeping this for keeping.
+    */
+  /*
+     * Part 3*/
+     char Option_Input;
+     std::string Option_Inpu;
     bool Picked_Option=false;
     int option;
     int eval_Value;
     Lexer Lexer_1;
-   
+      int kevin;
     string Whole_Input="";
     string input;
     bool finish_calc=false;
-	/*
-	This calculator starts by picking a format to output in. It can ethier output in decimal, hex or binary.
-	This is inputed based on the first char.
-	After the input the calculator can do one row operation with bitwise operations. 
-	It can also handle comments.
-	
-	The user just inputs a command and the calculator redisplay the input and present the evaluation to the user.
-	If there is a syntax error the calculator throws a exception and crashes 
-	
-	The user can press q and then enter to exit the program. 
-	
-	*/
+    bool first=false;
+    std::ifstream file("test2.txt");
+    std::string str; 
+    Parser Parse_1 ;
+    while (std::getline(file, str))
+    {
+        
+          
+        if (first==false){
+            Option_Inpu=Lexer_1.Get_Option(str);
+            cout<<"The Option Value is "<<Option_Inpu[0]<<"\n \n";
+        if (Option_Inpu[0]=='d'){
+        option=0;
+        Picked_Option=true;
+    }
+    else if (Option_Inpu[0]=='h'){
+        option=1;
+        Picked_Option=true;
+    }
+    else if (Option_Inpu[0]=='b'){
+        option=2;
+        Picked_Option=true;
+    }
+    else {
+        std::cout<<"Invalid Option \n";
+    }
+        first=true;
+        }
+        else {
+       Lexer_1.Read_Line(str,option);
+       bool is_white_space=Lexer_1.All_White_Space();
+       if (is_white_space){
+           //std::cout<<"space!! \n"; 
+       }
+       else{
+         cout<<"\n";
+         cout<<"The string is "<<str;
+          cout<<"\n";
+          cout<<"The lexed value is \n";
+         Lexer_1.Print();
+         cout<<"\n";
+         cout<<"\n";
+       
+             
+             Parse_1.Parse_Line(Lexer_1.Read_Line(str,option));
+                   cout<<"The Value you inputed \n";
+                       Parse_1.Parser_Print();
+                       
+                  eval_Value= Parse_1.Parser_Eval(option);
+              kevin=Parse_1.check_Scope();
+                   cout<<"\n The Scope count is "<<kevin<<"\n";
+                 
+                   Lexer_1.Clear_Vec();
+       }
+    }
+    }
+    
+    /*
     std::cout << "Welcome to Andrew Thornborough's Calculator  \n----------------------------------------------------------------------- \n";
     std::cout<<"This calculator can do the following \n";
       std::cout<<"1. One row calculations.\n2. Bitwise operators and exclusive/inclusive OR \n";
      std::cout<<"3. Output in various formats like hex and binary.\n4. Can handle comments with #\n";
      std::cout<<"\n----------------------------------------------------------------------- \n\n";
-	 //Stays in a loop unitl user picks the right command
     while(Picked_Option==false){
         std::cout<<"Please insert the following command d for decimal h for hex or b for binary \n";
     std::cin>>Option_Input;
@@ -82,10 +185,7 @@ int main(int argc, char** argv) {
     }
     }
     std::cout<<"Format Selected. Press q then enter to quit. \n Enter a command: \n";
-	//Main loop of calculator the program will get the input via getline and then lex the input 
-	//and then pass the lexer output into the input of the parser. 
-	// From there the parser will parse and functions can functions can be called from the syntax tree like Eval and print.
-	//This repeats until the user press q.
+    
     while(finish_calc==false){
         getline(std::cin,input);
         
@@ -105,7 +205,7 @@ int main(int argc, char** argv) {
         }
 
     }
-    
+    */
     /* From Part 2.
     cout<<"The whole input is the following: \n \n"<<Whole_Input;
             
@@ -287,6 +387,7 @@ int main(int argc, char** argv) {
     }
    * */ 
      std::cout<<"Calculator Exiting have a great day!";
-    return eval_Value;
+//    return eval_Value;
+     return 0;
 }
 

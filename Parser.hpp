@@ -1,4 +1,4 @@
-/* 
+  /* 
  * File:   Parser.hpp
  * Author: student16
  *
@@ -11,17 +11,19 @@
 #include "lexer.hpp"
 #include "Print.hpp"
 #include "Eval.hpp"
+#include"tables.hpp"
+#include "algorithm"
+#include "Declaration.hpp"
+#include <unordered_map>
 #define Syntax_Error 2
 
-//The parser class has a vector to hold the tokens from the lexer and a iterator to iterate through the vector.
-//It then use a recursion method described in the pdf 
-//to recursivly go down and implent the parser through itterating through the vector of tokens.
 class Parser {
+    Scope_Symbol_Table Scope_Tables;
     std::vector <Token*> Parsing_Token_Vect;
+    std::unordered_map <std::string, EXPR*> Var_List;
     std::vector <Token*>::iterator Token_Itter;
-//used to hold the final expression parse creates when using the print and eval function of the parser.
-    EXPR* Final_Expression;
-	//Determines if the vector of tokens has finished.
+  std::vector<std::string> Key_Words {"var","int","bool","true","false"};
+    EXPR* Final_Expression=NULL;
     bool End_OF_Line() {
         if (Token_Itter == Parsing_Token_Vect.end()) {
             return true;
@@ -29,23 +31,23 @@ class Parser {
             return false;
         }
     }
-//Boolean to determine if the parser already parsed the vector.
+
     bool has_parsed=false;
-	
-	//Use to see the element of the iterator
     Token* Look_Ahead();
-	//Use to increment the iterator
+    Token* Look_Multiple_Ahead(int amount);
+
     void Consume() {
         Token_Itter = Token_Itter + 1;
     }
-	//Check if the token type being inputed is the same as the token on the current position of the vector.
     bool Match_Statement(Token_Types type, Token* Current_Token);
     bool Match_Statement(Token_Types type);
-	//Starts the parsing of the lexer.
+    bool  Key_Word_Check(std::string var_name);
+    EXPR *  Check_For_New_Var();
+    EXPR * Check_Var(std::string);
     void Parse();
 
-    //Parsing Expressions
-//Parses each major expression section based on the pdf
+    //Expressions
+    
     EXPR * Parse_Expression();
     EXPR * Parse_Conditonal_Expression();
     EXPR * Parse_Or_Expression();
@@ -59,37 +61,168 @@ class Parser {
     EXPR * Parse_Multplicative_Expression();
     EXPR * Parse_Unary_Expression();
     EXPR * Parse_Primary_Expression();
-	
-	//Public Facing Functions
 public:
-//Copies the Tokens from the lexer into the parsers vector.
-//and Initalzie the Itterator
-        Parser(std::vector<Token*> Lex_Tokens) {
-        Parsing_Token_Vect = Lex_Tokens;
-        Token_Itter = Parsing_Token_Vect.begin();
+        Parser() {
+       
     }
-	//Functions to do something with the parser/ast tree
+        int check_Scope();
+        void Parse_Line(std::vector<Token*> Lex_Tokens);
     void Parser_Print();
     int Parser_Eval(int option);
 
 };
-//Prints the AST tree expression
+
+int Parser::check_Scope() {
+    return Scope_Tables.Number_Of_Scope;
+}
+
+
+EXPR * Parser::Check_Var(std::string name){
+    EXPR * E1;
+    std::unordered_map <std::string, EXPR*> ::iterator val;
+    val = Var_List.find(name);
+    if (val == Var_List.end()){
+        //Assert variable needs to be assigned in order to be used. 
+    }
+    else{
+        E1=val->second;
+        return E1;
+    }
+}
+
+EXPR *  Parser::Check_For_New_Var() {
+    EXPR* E1;
+     EXPR* E2;
+    std::string Var_Name;
+    if (Match_Statement(Var_KW_Token)) {
+        Token* Temp;
+         std::cout<<"In Var KW \n";
+        Variable_Token* Var_Tok_Class;
+        Consume();
+        if (Match_Statement(Int_KW_Token)) {
+            std::cout<<"In Int KW \n";
+            Consume();
+            if (Var_Token) {
+ std::cout<<"In Var \n";
+                Temp = Look_Ahead();
+                Var_Tok_Class = dynamic_cast<Variable_Token*> (Temp);
+                Var_Name = Var_Tok_Class->Send_Value();
+Consume();
+                
+
+std::unordered_map <std::string, EXPR*> ::iterator val;
+   val = Var_List.find(Var_Name);
+    if (val == Var_List.end()) {
+ 
+                if (Match_Statement(Equal_Token)) {
+                     std::cout<<"In equal \n";
+                    Consume();
+                    if (Match_Statement(Int_Token)) {
+                 E2= Parse_Expression();
+                         std::cout<<"In Int value \n";
+                        int Int_Val;
+                        Integer_Token* Int_Tok;
+                        Int_EXPR* Int_Exprs;
+                        Temp = Look_Ahead();
+                        if (E2->EXPR_type==E2->Int_Type){
+                            
+                        Int_Exprs = dynamic_cast< Int_EXPR*> (E2);
+                        Int_Val = Int_Exprs->Value;
+                      
+                        Consume();
+                         E1= new Var_Int_EXPR(Var_Name, Int_Val);
+                         Var_List.insert({Var_Name,E1});
+                         return E1;
+                        //HAVE TO ADD VAR TO TABLE
+                        }
+                        else {
+                        //Assert right side typing is wrong. 
+                        }
+                    }
+
+                }
+            }
+   else {
+        //ASSERT Cant have mutiple defintions of a variable
+        }
+
+            }
+
+
+        } else if (Match_Statement(Bool_KW_Token)) {
+Consume();
+            if (Var_Token) {
+
+                Temp = Look_Ahead();
+                Var_Tok_Class = dynamic_cast<Variable_Token*> (Temp);
+                Var_Name = Var_Tok_Class->Send_Value();
+Consume();
+                // Check If Var has been in scope or not.
+std::unordered_map <std::string, EXPR*> ::iterator val;
+   val = Var_List.find(Var_Name);
+    if (val == Var_List.end()){ 
+ 
+                if (Match_Statement(Equal_Token)) {
+                    Consume();
+                    if (Match_Statement(Bool_Token)) {
+                        
+                         E2= Parse_Expression();
+                         std::cout<<"In Bool value \n";
+                        int Bool_Val;
+                        
+                        Bool_EXPR* Bool_Exprs;
+                  
+                        if (E2->EXPR_type==E2->Bool_Type){
+                            
+                        Bool_Exprs = dynamic_cast< Bool_EXPR*> (E2);
+                        Bool_Val = Bool_Exprs->Value;
+                      
+                        Consume();
+                         E1= new Var_Bool_EXPR(Var_Name, Bool_Val);
+                         Var_List.insert({Var_Name,E1});
+                         return E1;
+                        //HAVE TO ADD VAR TO TABLE
+                        }
+                        else {
+                        //Assert right side typing is wrong. 
+                        }
+                  
+                    }
+
+                }
+            }
+    else {
+      //ASSERT Cant have mutiple defintions of a variable
+    }
+
+            }
+        }
+    }
+
+
+    //return true;
+    ;
+}
+void Parser::Parse_Line(std::vector<Token*> Lex_Tokens){
+    Parsing_Token_Vect = Lex_Tokens;
+        Token_Itter = Parsing_Token_Vect.begin();
+has_parsed=false;
+};
 void Parser::Parser_Print(){
     if (!has_parsed){
        Parse();
     has_parsed=true;}
 Print(Final_Expression);
 }
-
-//Evaulate the AST tree expression
  int Parser::Parser_Eval(int option){ 
      int value;
       if (!has_parsed){
        Parse();
     has_parsed=true;}
+     if (Final_Expression==NULL){}
+     else{
 value=Eval(Final_Expression);
 
-// if the expression is boolean print out the true or false equivlent
 if  (Final_Expression->EXPR_type==0){
         if (value==0){
         std::cout<<"\nThe Value it equals is false";
@@ -98,8 +231,7 @@ if  (Final_Expression->EXPR_type==0){
         std::cout<<"\nThe Value it equals is true";
         }
     }
-	//The value is integer determine which format is needed to print.
-    else{ 
+    else{
                   if (option==0){
                    std::cout<<"\nThe Value it equals is "<<value;}
                   else if (option==1){
@@ -111,9 +243,8 @@ if  (Final_Expression->EXPR_type==0){
                   
                   }
     }
-return value;
+return value;}
     }
-	//Starts the Parsing used as a helper function for Parse_Expression.
    void  Parser::Parse() {
     EXPR* Temp_Expr;
     Temp_Expr = Parse_Expression();
@@ -121,8 +252,6 @@ return value;
     Final_Expression= Temp_Expr;
     ;
 }
-
-//Use to see the element of the iterator
 Token* Parser::Look_Ahead() {
     if (End_OF_Line() == true) {
 
@@ -132,8 +261,21 @@ Token* Parser::Look_Ahead() {
     }
 };
 
+Token* Parser::Look_Multiple_Ahead(int amount) {
+    std::vector <Token*>::iterator Temp_Itter;
+    Temp_Itter = Token_Itter;
+    for (int count = 0; count < amount; count++) {
 
-//Check if the token type being inputed is the same as the token of a given Token.
+        //Making sure we are not skipping over eof.
+        if (Temp_Itter == Parsing_Token_Vect.end()) {
+            return NULL;
+        }
+
+        Temp_Itter = Temp_Itter + 1;
+    }
+    return *Temp_Itter;
+}
+
 bool Parser::Match_Statement(Token_Types type, Token* Current_Token) {
     if (Current_Token->Token_Type == type) {
         return true;
@@ -142,7 +284,7 @@ bool Parser::Match_Statement(Token_Types type, Token* Current_Token) {
     }
 
 }
-//Check if the token type being inputed is the same as the token on the current position of the vector.
+
 bool Parser::Match_Statement(Token_Types type) {
     if (Look_Ahead()->Token_Type == type) {
         return true;
@@ -151,13 +293,23 @@ bool Parser::Match_Statement(Token_Types type) {
     }
 }
 
+bool Parser::Key_Word_Check(std::string var_name){
+   return  std::find(Key_Words.begin(),Key_Words.end(),var_name) !=Key_Words.end();
+}
 
-//Starts the Psrsing function
 EXPR * Parser::Parse_Expression() {
+    if (Match_Statement(L_Brace_Token)) {
+        Scope_Tables.Add_Count();
+            Consume();
+    }
+    else if (Match_Statement(R_Brace_Token)) {
+         Scope_Tables.Remove_Count();
+            Consume();    
+     }
     return Parse_Conditonal_Expression();
     ;
 }
-//Parses Conditional Expressions
+
 EXPR * Parser::Parse_Conditonal_Expression() {
     EXPR* E1;
     E1 = Parse_Or_Expression();
@@ -177,7 +329,7 @@ EXPR * Parser::Parse_Conditonal_Expression() {
     }
 
 }
-//Parses logical or expressions.
+
 EXPR * Parser::Parse_Or_Expression() {
     EXPR* E1;
     E1 = Parse_And_Expression();
@@ -192,7 +344,7 @@ EXPR * Parser::Parse_Or_Expression() {
         }
     }
 }
-//Parses logical and expressions.
+
 EXPR * Parser::Parse_And_Expression() {
     EXPR* E1;
     EXPR* E2;
@@ -209,7 +361,7 @@ EXPR * Parser::Parse_And_Expression() {
     }
 
 }
-//Parses bit or expressions.
+
 EXPR * Parser::Parse_Bit_Or_Expression() {
     EXPR* E1;
     EXPR* E2;
@@ -225,7 +377,7 @@ EXPR * Parser::Parse_Bit_Or_Expression() {
 
     }
 }
-//Parses bit xor expressions
+
 EXPR * Parser::Parse_Bit_Xor_Expression() {
     EXPR* E1;
     EXPR* E2;
@@ -241,7 +393,7 @@ EXPR * Parser::Parse_Bit_Xor_Expression() {
 
     }
 }
-//Parses bit and expressions
+
 EXPR * Parser::Parse_Bit_And_Expression() {
     EXPR* E1;
     EXPR* E2;
@@ -258,8 +410,8 @@ EXPR * Parser::Parse_Bit_And_Expression() {
 
     }
 }
-//Parses Equality expressions
-// Which includes: (Equal, Not Equal)
+// Includes Equal, Not Equal
+
 EXPR * Parser::Parse_Equality_Expression() {
     EXPR* E1;
     EXPR* E2;
@@ -282,9 +434,8 @@ EXPR * Parser::Parse_Equality_Expression() {
 
     }
 }
+// Less than greater than, Less_Eq Greater_eq
 
-//Parses Ordering expressions
-// Which includes: ( Less than, greater than, Less_Eq, Greater_eq)
 EXPR * Parser::Parse_Ordering_Expression() {
     EXPR* E1;
     EXPR* E2;
@@ -320,8 +471,8 @@ EXPR * Parser::Parse_Ordering_Expression() {
 
 
 }
-//Parses Additive expressions
-// Which includes: (Add, Subtract)
+//Add and Subtract
+
 EXPR * Parser::Parse_Additive_Expression() {
     EXPR* E1;
     EXPR* E2;
@@ -344,9 +495,8 @@ EXPR * Parser::Parse_Additive_Expression() {
 
     }
 }
+// Multiply Divide Modulate
 
-//Parses Equality expressions
-// Which includes: (Multiply, Divide, Modulate)
 EXPR * Parser::Parse_Multplicative_Expression() {
     EXPR* E1;
     EXPR* E2;
@@ -372,8 +522,7 @@ EXPR * Parser::Parse_Multplicative_Expression() {
     }
 
 }
-//Parses Equality expressions
-//Which includes: (Tilda, Not Value,Negation Value)
+
 EXPR * Parser::Parse_Unary_Expression() {
     EXPR* E1;
     if (Match_Statement(Tilda_Token)) {
@@ -395,9 +544,7 @@ EXPR * Parser::Parse_Unary_Expression() {
 
 
 }
-//Parses Equality expressions
-// Which includes: (Boolean, Integer,Left/Right Parenthese)
-//If no values of these types exist throw a syntax error.
+
 EXPR * Parser::Parse_Primary_Expression() {
     Token* Temp;
     if (Match_Statement(Bool_Token)) {
@@ -424,7 +571,29 @@ EXPR * Parser::Parse_Primary_Expression() {
         } else {
             ExceptionThrow(Syntax_Error, "Error parentheses is not closed ");
         }
-    } 
+    }
+    else if (Match_Statement(Var_KW_Token)){
+      EXPR* Val=Check_For_New_Var();
+    return Val;
+    }
+    else if (Match_Statement(Var_Token)){
+        Variable_Token* VE1;
+        Temp = Look_Ahead();
+        VE1 = dynamic_cast<Variable_Token*> (Temp);
+        Consume();
+        EXPR* Val;
+    Val=Check_Var(VE1->Send_Value());
+    return Val;
+    }
+    else if (Match_Statement(L_Brace_Token)){
+        Consume();
+        return new No_Comp_EXPR();
+    }
+     else if (Match_Statement(R_Brace_Token)){
+          Consume();
+        return new No_Comp_EXPR();
+    
+    }
     else {
           ExceptionThrow(Syntax_Error, " No Valid Type");
     }

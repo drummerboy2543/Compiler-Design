@@ -35,11 +35,28 @@ int Eval(EXPR* e) {
         
       // The following functions simply Returns values
         void visit(Bool_EXPR* e) {
+           // std::cout<<"Eval Bool \n";
             Outcome = e->Value;
         }
 
         void visit(Int_EXPR* e) {
+             // std::cout<<"Eval Int \n";
             Outcome = e->Value;
+        }
+        
+        // The following functions simply Returns values
+        void visit(Var_Bool_EXPR* e) {
+           // std::cout<<"Eval Bool \n";
+            Outcome = e->Value;
+        }
+
+        void visit(Var_Int_EXPR* e) {
+             // std::cout<<"Eval Int \n";
+            Outcome = e->Value;
+        }
+           void visit(No_Comp_EXPR* e) {
+             // std::cout<<"Eval Int \n";
+            Outcome = 0;
         }
 
         

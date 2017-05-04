@@ -41,7 +41,32 @@ int Check(EXPR* e) {
                 Outcome = ERROR;
             }
         }
-        
+       void visit(Var_Bool_EXPR* e) {
+            if (e->EXPR_type == e->Bool_Type) {
+                Outcome = e->Bool_Type;
+            } else {
+                ExceptionThrow(Type_Error, "Bool is reported as a INT");
+                Outcome = ERROR;
+            }
+        }
+              void visit(Var_Int_EXPR* e) {
+            if (e->EXPR_type == e->Int_Type) {
+                Outcome = e->Int_Type;
+            } else {
+                ExceptionThrow(Type_Error, "Int is reported as a Bool");
+                Outcome = ERROR;
+            }
+        }
+              
+                      void visit(No_Comp_EXPR* e) {
+            if (e->EXPR_type == e->Int_Type) {
+                Outcome = e->Int_Type;
+            } else {
+                ExceptionThrow(Type_Error, "Int is reported as a Bool");
+                Outcome = ERROR;
+            }
+        }
+              
    //These checks requires a Boolean Expression to be well typed.
         void visit(Not_EXPR* e) {
             if (Check(e->e1) != e->Bool_Type) {
