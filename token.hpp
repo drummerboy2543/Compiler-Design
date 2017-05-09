@@ -177,7 +177,7 @@ std::string Token::Get_Token_String(int val) {
         case Int_Token: // integer token
             return "Integer Token";
         case Bool_Token: // Boolean token
-            return "Boolean Token";
+            return "Boolean sToken";
         case Plus_Token: // + token
             return "Plus sign Token";
         case Minus_Token: // - token

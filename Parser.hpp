@@ -96,14 +96,14 @@ EXPR *  Parser::Check_For_New_Var() {
     std::string Var_Name;
     if (Match_Statement(Var_KW_Token)) {
         Token* Temp;
-         std::cout<<"In Var KW \n";
+         //std::cout<<"In Var KW \n";
         Variable_Token* Var_Tok_Class;
         Consume();
         if (Match_Statement(Int_KW_Token)) {
-            std::cout<<"In Int KW \n";
+           // std::cout<<"In Int KW \n";
             Consume();
             if (Var_Token) {
- std::cout<<"In Var \n";
+ //std::cout<<"In Var \n";
                 Temp = Look_Ahead();
                 Var_Tok_Class = dynamic_cast<Variable_Token*> (Temp);
                 Var_Name = Var_Tok_Class->Send_Value();
@@ -115,11 +115,11 @@ std::unordered_map <std::string, EXPR*> ::iterator val;
     if (val == Var_List.end()) {
  
                 if (Match_Statement(Equal_Token)) {
-                     std::cout<<"In equal \n";
+                    // std::cout<<"In equal \n";
                     Consume();
                     if (Match_Statement(Int_Token)) {
                  E2= Parse_Expression();
-                         std::cout<<"In Int value \n";
+                         //std::cout<<"In Int value \n";
                         int Int_Val;
                         Integer_Token* Int_Tok;
                         Int_EXPR* Int_Exprs;
@@ -167,7 +167,7 @@ std::unordered_map <std::string, EXPR*> ::iterator val;
                     if (Match_Statement(Bool_Token)) {
                         
                          E2= Parse_Expression();
-                         std::cout<<"In Bool value \n";
+                         //std::cout<<"In Bool value \n";
                         int Bool_Val;
                         
                         Bool_EXPR* Bool_Exprs;
@@ -428,6 +428,15 @@ EXPR * Parser::Parse_Equality_Expression() {
             E2 = Parse_Ordering_Expression();
             E1 = new Neq_EXPR(E1, E2);
         }
+           else if (Match_Statement(R_Brace_Token)){
+         Scope_Tables.Remove_Count();
+          Consume();
+    
+    }
+            if (Match_Statement(L_Brace_Token)) {
+        Scope_Tables.Add_Count();
+            Consume();
+    }
         else {
             return E1;
         }
@@ -589,7 +598,9 @@ EXPR * Parser::Parse_Primary_Expression() {
         Consume();
         return new No_Comp_EXPR();
     }
+
      else if (Match_Statement(R_Brace_Token)){
+         Scope_Tables.Remove_Count();
           Consume();
         return new No_Comp_EXPR();
     

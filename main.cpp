@@ -91,15 +91,11 @@ int main(int argc, char** argv) {
     */
   /*
      * Part 3*/
-     char Option_Input;
      std::string Option_Inpu;
     bool Picked_Option=false;
     int option;
     int eval_Value;
     Lexer Lexer_1;
-      int kevin;
-    string Whole_Input="";
-    string input;
     bool finish_calc=false;
     bool first=false;
     std::ifstream file("test2.txt");
@@ -136,22 +132,22 @@ int main(int argc, char** argv) {
            //std::cout<<"space!! \n"; 
        }
        else{
-         cout<<"\n";
-         cout<<"The string is "<<str;
-          cout<<"\n";
-          cout<<"The lexed value is \n";
-         Lexer_1.Print();
-         cout<<"\n";
-         cout<<"\n";
+        // cout<<"\n";
+        // cout<<"The string is "<<str;
+        //  cout<<"\n";
+        //  cout<<"The lexed value is \n";
+        // Lexer_1.Print();
+        // cout<<"\n";
+        // cout<<"\n";
        
              
              Parse_1.Parse_Line(Lexer_1.Read_Line(str,option));
-                   cout<<"The Value you inputed \n";
+                   cout<<" \n \nThe Statement from this line you inputed \n";
+                    cout<<"\n";
                        Parse_1.Parser_Print();
                        
+                       cout<<"\n";
                   eval_Value= Parse_1.Parser_Eval(option);
-              kevin=Parse_1.check_Scope();
-                   cout<<"\n The Scope count is "<<kevin<<"\n";
                  
                    Lexer_1.Clear_Vec();
        }
@@ -386,7 +382,7 @@ int main(int argc, char** argv) {
 
     }
    * */ 
-     std::cout<<"Calculator Exiting have a great day!";
+     std::cout<<" \n \nCompiler Exiting have a great day!";
 //    return eval_Value;
      return 0;
 }

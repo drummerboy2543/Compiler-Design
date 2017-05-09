@@ -50,10 +50,10 @@ int Is_Scope_Balanced();
 
 void Scope_Symbol_Table::Add_Count(){
 Number_Of_Scope=Number_Of_Scope+1;
-std::cout<<"adding to scope\n";}
+}
 void Scope_Symbol_Table::Remove_Count(){
     Number_Of_Scope=Number_Of_Scope-1;
-   std::cout<<"removing to scope\n";}
+}
 int Scope_Symbol_Table::Is_Scope_Balanced(){
     return Number_Of_Scope;
 }
