@@ -510,7 +510,7 @@ std::string output;
       std::string Lexer::Get_Option(std::string Input_Str){
           std::string Trimed_Str="";
 Trimed_Str = Clear_Comments(Input_Str); //Get rid of any comments       
- std:: cout<<" The char is "<<Trimed_Str<<"\n \n \n";
+ //std:: cout<<" The char is "<<Trimed_Str<<"\n \n \n";
       return Trimed_Str;
     }
      bool Lexer::All_White_Space(){

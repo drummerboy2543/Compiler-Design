@@ -101,7 +101,9 @@ int main(int argc, char** argv) {
     std::ifstream file("test2.txt");
     std::string str; 
     Parser Parse_1 ;
-    while (std::getline(file, str))
+    bool hit_q=false;
+
+    while (std::getline(std::cin, str,'\n')&&!hit_q)
     {
         
           
@@ -126,6 +128,8 @@ int main(int argc, char** argv) {
         first=true;
         }
         else {
+            if (Option_Inpu[0]=='q'){
+                      hit_q=true;}else {
        Lexer_1.Read_Line(str,option);
        bool is_white_space=Lexer_1.All_White_Space();
        if (is_white_space){
@@ -140,16 +144,15 @@ int main(int argc, char** argv) {
         // cout<<"\n";
         // cout<<"\n";
        
-             
              Parse_1.Parse_Line(Lexer_1.Read_Line(str,option));
-                   cout<<" \n \nThe Statement from this line you inputed \n";
+                   cout<<" \nThe Statement from this line you inputed \n";
                     cout<<"\n";
                        Parse_1.Parser_Print();
                        
                        cout<<"\n";
                   eval_Value= Parse_1.Parser_Eval(option);
-                 
-                   Lexer_1.Clear_Vec();
+                 cout<<"\n";
+                   Lexer_1.Clear_Vec();}
        }
     }
     }
