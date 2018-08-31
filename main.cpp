@@ -35,7 +35,7 @@ void Expression_Print(std::string message, EXPR*e) {
 }
 
 /*
- * 
+ * This is the start of the main function.
  */
 int main(int argc, char** argv) {
    /*
